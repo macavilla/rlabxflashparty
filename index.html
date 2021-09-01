@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rlab x flashparty</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="https://unpkg.com/hydra-synth"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://unpkg.com/hydra-synth"></script>
 </head>
 
 <body>
@@ -18,7 +18,9 @@
          <button onclick="sketches[Math.floor(Math.random()*sketches.length)]()"> random </button>
         -->
         <button onclick="next()"> next </button>
+        <!--
         <span id="paragraph" style="color: white">    </span>
+        -->
     </div>
 
     <script>
@@ -48,27 +50,101 @@
             s0.initImage('https://rlab.be/assets/images/logo-rlab-negro.svg');
 
             //p5
-       
+            /* 
+            p1 = new P5();
+            p1.draw = () => {
+                p1.clear()
 
+                p1.textSize(100);
+                p1.fill(100, 200, 250);
+                p1.stroke(20);
+                p1.strokeWeight(20);
+                p1.textFont('monospace');
+                //p1.text('rlab', p1.mouseX, p1.mouseY);
+                p1.text('rlab', p1.displayWidth * 0.1, p1.displayHeight * 0.75);
+            }
+            p1.hide()
 
-            noise(5, 0.3, ({time}) => Math.sin(time) * 40) //.luma ([5])
+            s1.init({
+                src: p1.canvas
+            })
+            //para sacar p1 por outpu
+            //src(s1).out()
+            //fin p5            
+            */
+
+            noise(5, 0.3, ({
+                    time
+                }) => Math.sin(time) * 40) //.luma ([5])
                 .add(noise(200, 10, .10).hue(20, -5).scale(2, 2, () => window.innerWidth / window.innerHeight))
                 .kaleid(1)
-                .modulate(noise(({time}) => Math.sin(time / 40) * 40))
-                .modulateRotate(noise(({time}) => Math.sin(time / 100)))
-                .layer(src(s0).repeat(3).posterize(({time}) => Math.sin(time) * 40).contrast(({time}) => Math.sin(time)) //.invert()
-                .mask(shape(3, 0.4, 1e-6).modulateScrollX(noise(10, 0.1))
-                .layer(src(s0).repeat(3)).scale(1.25, .55)))
+                .modulate(noise(({
+                    time
+                }) => Math.sin(time / 40) * 40))
+                //.rotate( ({time}) => time%360)
+                .modulateRotate(noise(({
+                    time
+                }) => Math.sin(time / 100)))
+                .layer(src(s0).repeat(3).posterize(({
+                        time
+                    }) => Math.sin(time) * 40).color(-5, -5).invert()
+                    .mask(shape(3, 0.4, 1e-6).modulateScrollX(noise(10, 0.1)) //.modulateRotate (noise())
+                        .layer(src(s1).repeat(5)).scale(1.25, .55)))
+                .out(o0)
+
+
+        }
+
+        function jules1() {
+            //logo rlab
+            s0.initImage('https://rlab.be/assets/images/logo-rlab-negro.svg');
+
+            /*
+            //p5
+            p1 = new P5();
+            p1.draw = () => {
+                p1.clear()
+
+                p1.textSize(100);
+                p1.fill(100, 200, 250);
+                p1.stroke(20);
+                p1.strokeWeight(20);
+                p1.textFont('monospace');
+                //p1.text('rlab', p1.mouseX, p1.mouseY);
+                p1.text('rlab', p1.displayWidth * 0.1, p1.displayHeight * 0.75);
+            }
+            p1.hide()
+
+            s1.init({
+                src: p1.canvas
+            })
+            */
+            noise(5, 0.3, ({
+                    time
+                }) => Math.sin(time) * 40) //.luma ([5])
+                .add(noise(200, 10, .10).hue(20, -5).scale(2, 2, () => window.innerWidth / window.innerHeight))
+                .kaleid(1)
+                .modulate(noise(({
+                    time
+                }) => Math.sin(time / 40) * 40))
+                //.rotate( ({time}) => time%360)
+                .modulateRotate(noise(({
+                    time
+                }) => Math.sin(time / 100)))
+                .layer(src(s0).repeat(3).posterize(({
+                        time
+                    }) => Math.sin(time) * 40).color(-5, -5).invert()
+                    .mask(shape(3, 0.4, 1e-6).modulateScrollX(noise(10, 0.1)) //.modulateRotate (noise())
+                        .layer(src(s1).repeat(5)).scale(1.25, .55)))
                 .out(o0)
 
         }
 
 
-
         jules();
 
         function next() {
-            let p = document.getElementById('paragraph')
+            //let p = document.getElementById('paragraph')
 
             if (index < sketches.length) {
                 sketches[index]()
@@ -77,17 +153,25 @@
                 index = 0;
             }
 
-            p.innerHTML = index;
+            console.log(index);
+            // p.innerHTML = index;
 
         }
 
 
         let sketches = [
-            function () {maca()},
-            function () {jules()},
+            function () {
+                jules()
+            },
+            function () {
+                maca()
+            },
+            function () {
+                jules1()
+            },
             function () {
                 osc(1.96, 0.008, 256).repeat().modulateRotate(osc(2, 0.032, 100)).layer(src(s1).scale(0.327, .71,
-                () => window.innerWidth / window.innerHeight)).mask(shape(4, 0.55).rotate(({
+                    () => window.innerWidth / window.innerHeight)).mask(shape(4, 0.55).rotate(({
                     time
                 }) => time % 360).modulateRotate(shape(0.326).kaleid(0.895)).modulate(o0)).out(o0);
             },
