@@ -12,3 +12,10 @@ body{background: #000;}
     background-color: #fafafa;
     opacity: 0;
 }
+
+.controls{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}

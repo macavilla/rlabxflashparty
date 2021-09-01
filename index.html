@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,47 +8,90 @@
     <title>rlab x flashparty</title>
     <link rel="stylesheet" href="./style.css">
     <script src="https://unpkg.com/hydra-synth"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
 </head>
+
 <body>
 
-    <button onclick="sketches[Math.floor(Math.random()*sketches.length)]()"> random </button>
+    <div class="controls">
+        <!--
+         <button onclick="sketches[Math.floor(Math.random()*sketches.length)]()"> random </button>
+        -->
+        <button onclick="next()"> next </button>
+        <span id="paragraph" style="color: white">    </span>
+    </div>
 
     <script>
+        let index = 0;
+        let hydra = new Hydra()
 
-    var hydra = new Hydra()
-
-    s1.initImage('https://manifiesto.rlab.be/img/2.jpg');
-
-        function init(){
+        function maca() {
+            s1.initImage('https://manifiesto.rlab.be/img/2.jpg');
             osc(1.96, 0.25, 256).repeatX().modulateRotate(osc(2, 0, 100))
-            .layer(
-            src(s1).scale(.71,.71,()=>window.innerWidth/window.innerHeight).hue( ({time}) => Math.sin(time)*0.25 ) 
-            )
-            .mask(
-            shape(3).saturate(-3).scale(3,.6).modulateScale( noise(1,-.25).modulateRotate( osc(2, 0.25) ) ,15,0 )
-            )
-            .mask(
-            shape(4,.7).rotate( ({time}) => time*0.25 ).modulateRotate( shape(2).kaleid(3) ).modulate(o0).pixelate(99, 99)
-            ).out(o0);
+                .layer(
+                    src(s1).scale(.71, .71, () => window.innerWidth / window.innerHeight).hue(({
+                        time
+                    }) => Math.sin(time) * 0.25)
+                )
+                .mask(
+                    shape(3).saturate(-3).scale(3, .6).modulateScale(noise(1, -.25).modulateRotate(osc(2, 0.25)), 15, 0)
+                )
+                .mask(
+                    shape(4, .7).rotate(({
+                        time
+                    }) => time * 0.25).modulateRotate(shape(2).kaleid(3)).modulate(o0).pixelate(99, 99)
+                ).out(o0);
         }
 
-        
+        function jules() {
+            //logo rlab
+            s0.initImage('https://rlab.be/assets/images/logo-rlab-negro.svg');
 
-        init();
-        
+            //p5
+       
+
+
+            noise(5, 0.3, ({time}) => Math.sin(time) * 40) //.luma ([5])
+                .add(noise(200, 10, .10).hue(20, -5).scale(2, 2, () => window.innerWidth / window.innerHeight))
+                .kaleid(1)
+                .modulate(noise(({time}) => Math.sin(time / 40) * 40))
+                .modulateRotate(noise(({time}) => Math.sin(time / 100)))
+                .layer(src(s0).repeat(3).posterize(({time}) => Math.sin(time) * 40).contrast(({time}) => Math.sin(time)) //.invert()
+                .mask(shape(3, 0.4, 1e-6).modulateScrollX(noise(10, 0.1))
+                .layer(src(s0).repeat(3)).scale(1.25, .55)))
+                .out(o0)
+
+        }
+
+
+
+        jules();
+
+        function next() {
+            let p = document.getElementById('paragraph')
+
+            if (index < sketches.length) {
+                sketches[index]()
+                index++;
+            } else {
+                index = 0;
+            }
+
+            p.innerHTML = index;
+
+        }
+
+
         let sketches = [
-            function(){init()},
-            function(){voronoi(40, .1, 0.25).modulateHue(noise(10, 0, .5).luma(3).hue([0.2, 0.7, 0.9])).diff(osc(1, 0.165, () => Math.sin(time)).rotate(() => Math.sin(time)).pixelate(200, 0.5)).modulate(src(o0).add(solid(0.808, 1.337), 0.154), 0.342).blend(o0, .5).out();},
-            function(){voronoi(105).color(0.5, 0.14, 0.8).modulate(osc(10, .1).add(o0, 0.011)).add(shape(4, .2, 1)).out(o0);osc(12.219, 0.065, 0.7).color(1, 0.25, 0.5).diff(o0).modulate(o1, 0.5).out(o1);render(o1);},
-            function(){osc(1.96, 0.008, 256).repeat().modulateRotate(osc(2, 0.032, 100)).layer(src(s1).scale(0.327, .71, () => window.innerWidth / window.innerHeight)).mask(shape(4, 0.55).rotate(({time}) => time % 360).modulateRotate(shape(0.326).kaleid(0.895)).modulate(o0)).out(o0);},
-            function(){src(s0).color(-1, Math.random()*2, 1).colorama().out()},
-            function(){osc(1.96, 0.25, 256).repeatX().modulateRotate(osc(2, 0, 100)).layer( src(s1).scale(.71,.71,()=>window.innerWidth/window.innerHeight).hue( ({time}) => Math.sin(time)*0.25 )).mask(shape(4,.7).rotate( ({time}) => time*0.25 ).modulateRotate( shape(2).kaleid(3) ).modulate(o0).pixelate(99, 99)).out(o0)},
+            function () {maca()},
+            function () {jules()},
+            function () {
+                osc(1.96, 0.008, 256).repeat().modulateRotate(osc(2, 0.032, 100)).layer(src(s1).scale(0.327, .71,
+                () => window.innerWidth / window.innerHeight)).mask(shape(4, 0.55).rotate(({
+                    time
+                }) => time % 360).modulateRotate(shape(0.326).kaleid(0.895)).modulate(o0)).out(o0);
+            },
         ]
-
-        
-        
-        
-
     </script>
 </body>
 
